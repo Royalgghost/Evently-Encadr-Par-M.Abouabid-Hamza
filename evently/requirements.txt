@@ -1,0 +1,8 @@
+django>=5.0.0
+mysqlclient>=2.2.0
+Pillow>=11.0.0
+reportlab>=4.0.0
+qrcode>=8.0.0
+arrow>=1.2.3
+python-dateutil>=2.8.2
+setuptools>=65.5.1  # Required for qrcode[pil]

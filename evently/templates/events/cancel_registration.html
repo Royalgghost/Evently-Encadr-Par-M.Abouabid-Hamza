@@ -1,0 +1,50 @@
+{% extends "events/base.html" %}
+{% block title %}Cancel Registration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h3 class="card-title mb-0">Cancel Registration</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Are you sure you want to cancel your registration for <strong>{{ event.title }}</strong>?
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Event Details</h5>
+                    <p class="text-muted">
+                        <i class="far fa-calendar-alt"></i> {{ event.start_date|date:"F d, Y" }}<br>
+                        <i class="far fa-clock"></i> {{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                    </p>
+                    {% if event.venue %}
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ event.venue.name }}, {{ event.venue.address }}
+                    </p>
+                    {% elif event.location_address %}
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ event.location_address }}
+                    </p>
+                    {% endif %}
+                </div>
+                
+                {% if event.waiting_list.count > 0 %}
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle"></i> Note: There are currently {{ event.waiting_list.count }} people on the waiting list. If you cancel, your spot will be given to the next person in line.
+                </div>
+                {% endif %}
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Back to Profile</a>
+                        <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

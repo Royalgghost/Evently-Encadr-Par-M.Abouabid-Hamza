@@ -1,0 +1,186 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 d-flex align-items-center">
+        <div>
+            <h1 class="display-4 fw-bold mb-4">Manage & Discover Events with Evently</h1>
+            <p class="lead mb-4">The easiest way to organize, manage, and attend events. From conferences to workshops, Evently has you covered.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{% url 'events' %}" class="btn btn-primary btn-lg px-4 me-md-2">Browse Events</a>
+                {% if user.is_authenticated and user.profile.role in 'admin,organizer' %}
+                <a href="{% url 'create_event' %}" class="btn btn-outline-secondary btn-lg px-4">Create Event</a>
+                {% else %}
+                <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg px-4">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <img src="{% static 'images/banner.jpg' %}" alt="Events" class="img-fluid rounded shadow">
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How Evently Works</h2>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-calendar-plus fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">Create Events</h3>
+                <p class="card-text">Create and customize your events with all the details your attendees need to know.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-users fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">Manage Registrations</h3>
+                <p class="card-text">Easily manage attendee registrations, waitlists, and send notifications.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-ticket-alt fa-3x text-primary"></i>
+                </div>
+                <h3 class="card-title">Generate Tickets</h3>
+                <p class="card-text">Create and distribute personalized event tickets with QR codes for check-in.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Featured Event</h2>
+    </div>
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/featured-event.jpg' %}" alt="Featured Event" class="card-img-top" style="height: 300px; object-fit: cover;">
+            <div class="card-body text-center">
+                <h3 class="card-title">Annual Tech Conference 2025</h3>
+                <p class="card-text">Join us for our flagship event featuring industry leaders, innovative workshops, and networking opportunities.</p>
+                <a href="{% url 'events' %}" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">What Our Attendees Say</h2>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex mb-3">
+                    <img src="{% static 'images/testimonial1.jpg' %}" alt="Testimonial" class="rounded-circle" width="60" height="60">
+                    <div class="ms-3">
+                        <h5 class="mb-0">Sarah Johnson</h5>
+                        <p class="text-muted">Marketing Director</p>
+                    </div>
+                </div>
+                <p class="card-text">"Evently made organizing our company retreat so easy! The platform is intuitive, and the team was able to register without any issues. Will definitely use it again for our next event."</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex mb-3">
+                    <img src="{% static 'images/testimonial2.jpg' %}" alt="Testimonial" class="rounded-circle" width="60" height="60">
+                    <div class="ms-3">
+                        <h5 class="mb-0">Michael Chen</h5>
+                        <p class="text-muted">Tech Entrepreneur</p>
+                    </div>
+                </div>
+                <p class="card-text">"As an event organizer, I've tried many platforms, but Evently stands out with its clean interface and powerful features. It's helped me grow my workshop attendance by 40% this year alone!"</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Event Gallery</h2>
+    </div>
+    <div class="col-md-4 mb-4">
+        <img src="{% static 'images/gallery1.jpg' %}" alt="Gallery Image" class="img-fluid rounded shadow-sm" style="height: 200px; width: 100%; object-fit: cover;">
+    </div>
+    <div class="col-md-4 mb-4">
+        <img src="{% static 'images/gallery2.jpg' %}" alt="Gallery Image" class="img-fluid rounded shadow-sm" style="height: 200px; width: 100%; object-fit: cover;">
+    </div>
+    <div class="col-md-4 mb-4">
+        <img src="{% static 'images/gallery3.jpg' %}" alt="Gallery Image" class="img-fluid rounded shadow-sm" style="height: 200px; width: 100%; object-fit: cover;">
+    </div>
+</div>
+
+{% if upcoming_events %}
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="mb-4">Upcoming Events</h2>
+    </div>
+    
+    {% for event in upcoming_events %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if event.poster_image %}
+            <img src="{{ event.poster_image.url }}" alt="{{ event.title }}" class="card-img-top event-image">
+            {% else %}
+                {% if event.category == 'conference' %}
+                <img src="{% static 'images/conference.jpg' %}" alt="{{ event.title }}" class="card-img-top event-image">
+                {% elif event.category == 'workshop' %}
+                <img src="{% static 'images/workshop.jpg' %}" alt="{{ event.title }}" class="card-img-top event-image">
+                {% elif event.category == 'social' %}
+                <img src="{% static 'images/social.jpg' %}" alt="{{ event.title }}" class="card-img-top event-image">
+                {% elif event.category == 'concert' %}
+                <img src="{% static 'images/concert.jpg' %}" alt="{{ event.title }}" class="card-img-top event-image">
+                {% else %}
+                <img src="{% static 'images/event' %}{{ forloop.counter|divisibleby:3|yesno:'3,1,2' }}.jpg" alt="{{ event.title }}" class="card-img-top event-image">
+                {% endif %}
+            {% endif %}
+            <div class="card-body">
+                <span class="badge bg-secondary mb-2">
+                    {% if event.category == 'conference' %}
+                    <img src="{% static 'images/icon-conference.png' %}" alt="Conference" width="16" height="16" class="me-1">
+                    {% elif event.category == 'workshop' %}
+                    <img src="{% static 'images/icon-workshop.png' %}" alt="Workshop" width="16" height="16" class="me-1">
+                    {% elif event.category == 'social' %}
+                    <img src="{% static 'images/icon-social.png' %}" alt="Social" width="16" height="16" class="me-1">
+                    {% elif event.category == 'concert' %}
+                    <img src="{% static 'images/icon-concert.png' %}" alt="Concert" width="16" height="16" class="me-1">
+                    {% endif %}
+                    {{ event.get_category_display }}
+                </span>
+                <h5 class="card-title">{{ event.title }}</h5>
+                <p class="card-text text-muted">
+                    <i class="far fa-calendar-alt"></i> {{ event.start_date|date:"F d, Y" }}<br>
+                    <i class="far fa-clock"></i> {{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                </p>
+                <p class="card-text">{{ event.description|truncatewords:15 }}</p>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="{% url 'event_detail' event.slug %}" class="btn btn-outline-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <div class="col-12 text-center mt-3">
+        <a href="{% url 'events' %}" class="btn btn-outline-primary">View All Events</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

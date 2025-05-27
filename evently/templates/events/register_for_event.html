@@ -1,0 +1,98 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% block title %}Register for {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow overflow-hidden">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Register for Event</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h5>{{ event.title }}</h5>
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-secondary me-2">
+                                {% if event.category == 'conference' %}
+                                <img src="{% static 'images/icon-conference.png' %}" alt="Conference" width="16" height="16" class="me-1">
+                                {% elif event.category == 'workshop' %}
+                                <img src="{% static 'images/icon-workshop.png' %}" alt="Workshop" width="16" height="16" class="me-1">
+                                {% elif event.category == 'social' %}
+                                <img src="{% static 'images/icon-social.png' %}" alt="Social" width="16" height="16" class="me-1">
+                                {% elif event.category == 'concert' %}
+                                <img src="{% static 'images/icon-concert.png' %}" alt="Concert" width="16" height="16" class="me-1">
+                                {% endif %}
+                                {{ event.get_category_display }}
+                            </span>
+                            {% if event.available_seats > 0 %}
+                            <span class="badge bg-success">{{ event.available_seats }} Seats Available</span>
+                            {% else %}
+                            <span class="badge bg-danger">Fully Booked</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-muted">
+                            <i class="far fa-calendar-alt"></i> {{ event.start_date|date:"F d, Y" }}<br>
+                            <i class="far fa-clock"></i> {{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                        </p>
+                        {% if event.venue %}
+                        <p class="text-muted">
+                            <i class="fas fa-map-marker-alt"></i> {{ event.venue.name }}, {{ event.venue.address }}
+                        </p>
+                        {% elif event.location_address %}
+                        <p class="text-muted">
+                            <i class="fas fa-map-marker-alt"></i> {{ event.location_address }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="{% static 'images/qr-code.png' %}" alt="Event QR Code" class="img-fluid rounded mb-2" style="max-width: 120px;">
+                        <p class="small text-muted">Scan for event details</p>
+                    </div>
+                </div>
+                
+                {% if event.available_seats > 0 %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> There are {{ event.available_seats }} seats available for this event.
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-circle"></i> This event is fully booked. By submitting this form, you will be added to the waiting list.
+                </div>
+                {% endif %}
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mt-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="" id="confirmCheck" required>
+                        <label class="form-check-label" for="confirmCheck">
+                            I confirm that I want to register for this event.
+                        </label>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'event_detail' event.slug %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if event.available_seats > 0 %}
+                                Confirm Registration
+                            {% else %}
+                                Join Waiting List
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

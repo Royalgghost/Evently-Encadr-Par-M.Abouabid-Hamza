@@ -1,0 +1,43 @@
+{% extends "events/base.html" %}
+{% block title %}Delete Venue{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h3 class="card-title mb-0">Delete Venue</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Are you sure you want to delete venue <strong>{{ object.name }}</strong>?
+                </div>
+                
+                <p class="mb-4">This action cannot be undone. If there are events associated with this venue, you should reassign them first.</p>
+                
+                <div class="mb-4">
+                    <h5>Venue Details</h5>
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ object.address }}, {{ object.city }}<br>
+                        <i class="fas fa-users"></i> Capacity: {{ object.capacity }} people
+                    </p>
+                </div>
+                
+                {% if object.events.count > 0 %}
+                <div class="alert alert-danger mb-4">
+                    <strong>Warning:</strong> This venue has {{ object.events.count }} associated events. Deleting this venue may affect these events.
+                </div>
+                {% endif %}
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

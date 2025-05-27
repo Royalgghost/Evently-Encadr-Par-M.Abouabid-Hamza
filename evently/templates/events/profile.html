@@ -1,0 +1,313 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header p-0">
+                <div class="position-relative">
+                    <img src="{% static 'images/profile-bg.jpg' %}" alt="Profile Background" class="card-img-top" style="height: 120px; object-fit: cover;">
+                    <div class="position-absolute bottom-0 start-50 translate-middle-x" style="transform: translateY(50%);">
+                        {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle border border-3 border-white" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'images/avatar-default.png' %}" alt="{{ user.username }}" class="rounded-circle border border-3 border-white" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body text-center pt-5 mt-4">
+                <h5>{{ user.get_full_name }}</h5>
+                <p class="text-muted">@{{ user.username }}</p>
+                <p class="text-muted">{{ user.email }}</p>
+                <div class="badge bg-secondary mb-3">{{ user.profile.get_role_display }}</div>
+                {% if user.profile.bio %}
+                <div class="mb-3">
+                    <h6>About Me</h6>
+                    <p>{{ user.profile.bio }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Update Profile Form -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">Update Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ user_form.username.id_for_label }}" class="form-label">Username</label>
+                                {{ user_form.username }}
+                                {% if user_form.username.errors %}
+                                    <div class="text-danger">
+                                        {% for error in user_form.username.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger">
+                                        {% for error in user_form.email.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in user_form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in user_form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ profile_form.bio.id_for_label }}" class="form-label">Bio</label>
+                        {{ profile_form.bio }}
+                        {% if profile_form.bio.errors %}
+                            <div class="text-danger">
+                                {% for error in profile_form.bio.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                                {{ profile_form.phone_number }}
+                                {% if profile_form.phone_number.errors %}
+                                    <div class="text-danger">
+                                        {% for error in profile_form.phone_number.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                {{ profile_form.profile_picture }}
+                                {% if profile_form.profile_picture.errors %}
+                                    <div class="text-danger">
+                                        {% for error in profile_form.profile_picture.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Upcoming Events -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">My Registered Events</h4>
+            </div>
+            <div class="card-body">
+                {% if user_registrations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registration in user_registrations %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'event_detail' registration.event.slug %}">{{ registration.event.title }}</a>
+                                    </td>
+                                    <td>{{ registration.event.start_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        {% if registration.status == 'confirmed' %}
+                                        <span class="badge bg-success">Confirmed</span>
+                                        {% elif registration.status == 'cancelled' %}
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'generate_ticket' registration.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                <i class="fas fa-ticket-alt"></i> Ticket
+                                            </a>
+                                            <a href="{% url 'cancel_registration' registration.id %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You haven't registered for any upcoming events yet. 
+                        <a href="{% url 'events' %}" class="alert-link">Browse events</a> to find something interesting!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Organized Events (for organizers) -->
+        {% if organized_events %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">My Organized Events</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Attendees</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in organized_events %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'event_detail' event.slug %}">{{ event.title }}</a>
+                                </td>
+                                <td>{{ event.start_date|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if event.is_published %}
+                                    <span class="badge bg-success">Published</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Draft</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ event.registrations.count }} / {{ event.capacity }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'update_event' event.slug %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <a href="{% url 'delete_event' event.slug %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Notifications -->
+        {% if notifications %}
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">Notifications</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for notification in notifications %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ notification.title }}</h5>
+                            <small>{{ notification.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1">{{ notification.message }}</p>
+                        {% if notification.event %}
+                        <a href="{% url 'event_detail' notification.event.slug %}" class="btn btn-sm btn-outline-primary mt-2">
+                            View Event
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap classes to form fields
+    document.addEventListener('DOMContentLoaded', function() {
+        // User form fields
+        const userFields = [
+            'id_username', 'id_email', 'id_first_name', 'id_last_name'
+        ];
+        
+        // Profile form fields
+        const profileFields = [
+            'id_bio', 'id_phone_number'
+        ];
+        
+        // Add form-control class to text fields
+        userFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) element.classList.add('form-control');
+        });
+        
+        profileFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) element.classList.add('form-control');
+        });
+        
+        // Add form-control to file inputs
+        const fileInput = document.getElementById('id_profile_picture');
+        if (fileInput) fileInput.classList.add('form-control');
+    });
+</script>
+{% endblock %}
