@@ -1,132 +1,121 @@
 # Evently - Event Management System
 
-Evently is a comprehensive event management platform built with Django. It allows users to create, manage, and participate in various types of events like conferences, workshops, meetups, and more.
+Evently is a Django-based event management platform that helps users create, manage, and participate in events such as conferences, workshops, meetups, and other community activities.
 
 ## Features
 
-### User Management
-- User registration and authentication
-- User profiles with roles (admin, organizer, participant)
-- Profile customization with profile pictures
+### User management
+- user registration and login
+- profile management
+- admin and organizer workflows
 
-### Event Management
-- Create, read, update, and delete events
-- Event details including title, description, location, date, capacity
-- Event categorization
-- Event image uploads
-- Event search and filtering
+### Event management
+- create, update, and delete events
+- event details including title, description, date, location, and capacity
+- categorization and event filtering
+- image support for event-related media
 
-### Registration System
-- Event registration for participants
-- Registration capacity limits
-- Waiting list functionality
-- Ticket generation (PDF with QR codes)
+### Registration system
+- participant registration for events
+- capacity validation and attendee limits
+- event-specific user dashboard
+- QR-based ticket support
 
-### Planning and Organization
-- Event calendar views
-- Filtering by date, type, location
-- Responsive UI for all devices
+### Admin and dashboard features
+- administrative views for event oversight
+- user and event management pages
+- custom templates for a complete event workflow
 
-### Additional Features
-- Email notifications for event changes, registration confirmations
-- Reminder system for upcoming events
-- User dashboard with registered events
-- QR code tickets for check-in
+## Tech stack
 
-## Technology Stack
+- Backend: Django 5
+- Database: SQLite by default
+- Optional database: MySQL (available in settings)
+- Frontend: HTML, CSS, JavaScript, Bootstrap-based templates
+- Media handling: Pillow
+- Ticket generation: ReportLab
+- QR codes: qrcode
 
-- **Backend**: Django 5.x
-- **Database**: MySQL
-- **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
-- **Authentication**: Django built-in authentication system
-- **PDF Generation**: ReportLab
-- **QR Codes**: qrcode
-- **Date Handling**: Arrow, python-dateutil
+## Project structure
+
+```text
+evently/
+├── evently/                  # Django project config
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+├── events/                   # main app
+│   ├── admin.py
+│   ├── admin_views.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── signals.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── views_event_management.py
+│   └── migrations/
+├── templates/                # HTML templates
+├── static/                   # CSS, JS, and image assets
+├── manage.py                 # Django entry point
+├── requirements.txt          # dependencies
+├── init_db.sql               # database initialization script
+├── README.md                 # project documentation
+└── ...
+```
 
 ## Installation
 
 ### Prerequisites
-- Python 3.8 or higher
-- MySQL server
-- pip (Python package manager)
+- Python 3.10+
+- pip
 
-### Setup Instructions
+### Setup
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
+1. Change into the project directory:
+   ```bash
    cd evently
    ```
 
-2. Create a virtual environment and activate it:
-   ```
-   python -m venv venv
-   venv\Scripts\activate  # Windows
-   source venv/bin/activate  # Linux/Mac
+2. Create a virtual environment:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate     # Linux/macOS
+   .venv\Scripts\activate        # Windows
    ```
 
-3. Install dependencies:
-   ```
+3. Install the dependencies:
+   ```bash
    pip install -r requirements.txt
    ```
 
-4. Configure the MySQL database in `settings.py` with your credentials
-
-5. Run migrations to create the database schema:
-   ```
-   python manage.py makemigrations
+4. Apply the database migrations:
+   ```bash
    python manage.py migrate
    ```
 
-6. Create a superuser to access the admin interface:
-   ```
+5. Create a superuser for the admin interface:
+   ```bash
    python manage.py createsuperuser
    ```
 
-7. Start the development server:
-   ```
+6. Start the development server:
+   ```bash
    python manage.py runserver
    ```
 
-8. Access the application in your browser at `http://127.0.0.1:8000/`
+7. Open the app in your browser:
+   ```text
+   http://127.0.0.1:8000/
+   ```
 
-## Project Structure
+## Configuration notes
 
-- `events/` - Main application module
-  - `models.py` - Database models
-  - `views.py` - View functions and classes
-  - `views_event_management.py` - Event management views
-  - `forms.py` - Form classes
-  - `admin.py` - Admin interface configuration
-  - `urls.py` - URL routing
-  - `signals.py` - Signal handlers
-
-- `templates/` - HTML templates
-  - `events/` - Application templates
-    - `base.html` - Base template with common elements
-    - Various view templates
-
-- `static/` - Static files (CSS, JS, images)
-  - `css/` - CSS files
-  - `js/` - JavaScript files
-  - `images/` - Static images
-
-- `media/` - User-uploaded files
-  - `profile_pics/` - User profile pictures
-  - `event_posters/` - Event poster images
-
-## User Roles
-
-- **Administrator**: Full system access, can manage all events and users
-- **Organizer**: Can create and manage their own events
-- **Participant**: Can browse events and register for them
+- The project is configured to use SQLite by default, which is suitable for local development.
+- MySQL configuration is included in `evently/evently/settings.py` and can be enabled when needed.
+- Static and media file directories are configured for the project template and upload system.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgements
-
-- Django framework
-- Bootstrap for frontend components
-- All other open-source libraries used in this project
+This repository does not currently include an explicit license file. If this project is being shared publicly, add the appropriate license before distribution or deployment.
